@@ -13,7 +13,7 @@ The design specification is to define the design for all components of the CTS R
 
 The following is the Data Flow diagram for the design of the system.
 
-![Alt text](https://github.com/laikayeekelly/CTS_Regression_Test/raw/master/Data_Flow_Diagram.JPG)
+![Alt text](https://github.com/laikayeekelly/CTS_Regression_Test_Python/raw/master/Data_Flow_Diagram.JPG)
 
 
 
