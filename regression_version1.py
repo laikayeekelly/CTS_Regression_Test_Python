@@ -1,38 +1,27 @@
-# CTS Regression Test Plan Generating System
+# CTS Regression Test Plan Generating System (Version 1)
 # Prepared by Kelly Lai
 
-input = open('testResult.xml', 'r')
-output = open('ctsRegression.xml', 'w')
-output.write('<?xml version="1.0" encoding="UTF-8"?>\n')
-output.write('<TestPlan version="1.0">\n')
+with open('ctsRegression.xml', 'w') as output:
+    with open('testResult.xml', 'r') as input:
 
-line = ''
-package = ''
-xml_text = ''
-package_list = []
-start_a_new_package = 1
-no_of_failed_test_cases = 0       
+        output.write('<?xml version="1.0" encoding="UTF-8"?>\n')
+        output.write('<TestPlan version="1.0">\n')
 
-while line.find('</TestResult>') is -1 :
-    if line.find('<TestPackage') != -1:
-        tmp = line.split('"')  
-        package = tmp[3]                         
-        start_a_new_package = 1                  
+        package = ''
+        inside_a_package = False  
+
+        for line in input:
+            if ('</TestResult>' in line):
+                break
+
+            if ('<TestPackage' in line):
+                package = line.split('"')[3]
+                inside_a_package = False                 
         
-    if (line.find('result="fail"') != -1): 
-        no_of_failed_test_cases = no_of_failed_test_cases + 1
-        if (start_a_new_package == 1):
-            start_a_new_package = 0
-            package_list.append(package)              
-            xml_text = '  <Entry uri="' + package + '"/>\n'
-            output.write(xml_text)
+            if ('result="fail"' in line): 
+                if (inside_a_package == False):
+                    inside_a_package = True            
+                    output.write('  <Entry uri="' + package + '"/>\n')
                 
-    line = input.readline()
+        output.write('</TestPlan>\n')
 
-if (no_of_failed_test_cases >= 1000) : 
-    print 'Number of failed test cases exceeds 1000 '
-    print 'regression testing is not suggested'
-
-output.write('</TestPlan>\n')
-input.close()
-output.close()
